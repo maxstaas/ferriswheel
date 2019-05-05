@@ -137,6 +137,11 @@ async def on_message(message):
         msg = moveanime().format(message)
         await message.channel.send(msg)
 
+    elif message.content.startswith('!resize'):
+        CMD = 'aaresize.sh'
+        fp = subprocess.check_output(CMD, shell=True)
+        await message.channel.send('probs resized idk')
+
     elif message.content.startswith('!currweather'):
         location = message.content[len('!currweather '):].strip()
         CMD = '/home/nande/discordbot/currweather.py ' + '\'' + location + '\'' ' > tmp'

@@ -47,14 +47,14 @@ commands:
 
   sends scheduled for that day
 
-!schedule
+!schedule:
 
   sends full schedule
   
-!deleteme
+!deleteme:
 
   deletes...
 
-!owo
+!owo:
 
   owoifies, kms

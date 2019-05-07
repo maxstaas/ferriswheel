@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.6
 import logging
 import discord
 from discord.ext import commands
@@ -8,6 +8,7 @@ import os
 import asyncio
 import datetime
 import time
+import re   #for owoify
 
 logging.basicConfig(level=logging.INFO)
 
@@ -100,6 +101,16 @@ def moveanime():
  return(out)
 
 
+def owoify(v):
+  v = re.sub('[rl]','w',v)  #replace r or l for w
+  v = re.sub('[RL]','W',v)
+  v = re.sub('(n)([aeiou])','ny\g<2>',v)    #replace n followed by a or e... for ny(a or e...)
+  v = re.sub('(N)([aeiou])','Ny\g<2>',v)
+  v = re.sub('(n)([AEIOU])','ny\g<2>',v)
+  v = re.sub('(N)([AEIOU])','NY\g<2>',v)
+  v = v.replace('ove','uv')
+  return(v)
+
 
 @client.event
 async def on_message(message):
@@ -169,7 +180,7 @@ async def on_message(message):
         await message.channel.send(msg)
 
 
-    elif message.content.startswith('!nyaa'):
+    elif message.content.startswith('!nyaa') and (message.author == message.author.guild.owner):
       if active_task==1:
         add_nyaa_fail()
       else:
@@ -221,14 +232,11 @@ async def on_message(message):
               break
             message = await client.wait_for('message',check=check)
           if z!=1:
-            if message.author == message.author.guild.owner:
-              select = int(message.content)-1
-              CMD = 'deluge-console -c /var/lib/deluge/.config/deluge/ add ' + link[select]
-              CMD = CMD.strip('\n')
-              subprocess.call(CMD, shell=True)
-              await message.channel.send('Downloading\n{}'.format(name[select]))
-            else:
-              await message.channel.send('Download it urself: {}'.format(link[select]))
+            select = int(message.content)-1
+            CMD = 'deluge-console -c /var/lib/deluge/.config/deluge/ add ' + link[select]
+            CMD = CMD.strip('\n')
+            subprocess.call(CMD, shell=True)
+            await message.channel.send('Downloading\n{}'.format(name[select]))
           else:
             await message.channel.send('k')
         if nyaa_fail_counter!=0:
@@ -319,13 +327,17 @@ async def on_message(message):
     elif message.content.startswith('!deleteme'):
         await message.delete()
 
-    elif message.content.startswith('!editme'):
-        await message.edit(content='uwu')
+    elif message.content.startswith('!owo'):
+        msg = owoify(message.content[4:].strip())
+        await message.channel.send(msg)
 
     elif message.content.startswith('!'):
         msg = await message.channel.send(message.content[1:].strip()+' urself')
         await asyncio.sleep(3)
         await msg.delete()
+
+    '''else:
+        await message.channel.send(content=owoify(message.content)) #cant edit other peoples messages, tragic'''
 
     '''elif message.content.startswith('!quit'):
         discord.Client().close()'''

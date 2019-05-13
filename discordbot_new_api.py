@@ -109,6 +109,9 @@ def owoify(v):
   v = re.sub('(n)([AEIOU])','ny\g<2>',v)
   v = re.sub('(N)([AEIOU])','NY\g<2>',v)
   v = v.replace('ove','uv')
+  v = v.replace('cwizzy','cwizzy chan')
+  v = v.replace('siyaah','sayaka chan')
+  v = v.replace('buwwet','buwwet chan')
   return(v)
 
 
@@ -121,6 +124,10 @@ async def on_message(message):
 
     elif message.content.startswith('!hello'):
         msg = 'Hello {0.author.mention}'.format(message)
+        await message.channel.send(msg)
+
+    elif message.content.startswith('!owner'):
+        msg = '{0.author.guild.owner.mention} is the owner'.format(message)
         await message.channel.send(msg)
 
     elif message.content.startswith('!clear'):
@@ -329,6 +336,7 @@ async def on_message(message):
 
     elif message.content.startswith('!owo'):
         msg = owoify(message.content[4:].strip())
+        await message.delete()
         await message.channel.send(msg)
 
     elif message.content.startswith('!'):

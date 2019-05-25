@@ -9,6 +9,8 @@ import asyncio
 import datetime
 import time
 import re   #for owoify
+import requests
+from imgurpython import ImgurClient
 
 logging.basicConfig(level=logging.INFO)
 
@@ -114,6 +116,21 @@ def owoify(v):
   v = v.replace('buwwet','buwwet chan')
   return(v)
 
+def randomthigh()
+  client_id = '6d6801a1d5fb69d'
+  client_secret = '74d6a3f5f56ae62e73ce05d7855effe2548ea89d'
+  access_token = 'e49a47fc68fa09d88e2e53e901773e13c46946dc'
+  refresh_token = '1d1d7ed324b3e4581b61b84562389969980d5c1f'
+  
+  client = ImgurClient(client_id, client_secret, access_token, refresh_token) #required to access imgur Api
+
+  Links = []
+  items = client.get_album_images('y73csJo')
+
+  for item in items:
+    Links.append(item.link)
+
+return(random.choice(Links))
 
 @client.event
 async def on_message(message):
@@ -336,6 +353,11 @@ async def on_message(message):
 
     elif message.content.startswith('!owo'):
         msg = owoify(message.content[4:].strip())
+        await message.delete()
+        await message.channel.send(msg)
+        
+    elif message.content.startswith('!thighs'):
+        msg = randomthigh()
         await message.delete()
         await message.channel.send(msg)
 
